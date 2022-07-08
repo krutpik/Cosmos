@@ -8,6 +8,8 @@ from rocket import Rocket
 
 from bullet import Bullet
 
+from alien import Alien
+
 
 class Cosmos:
     """Главный класс игры Cosmos"""
@@ -19,9 +21,14 @@ class Cosmos:
         pygame.display.set_caption('Cosmos')
         self.fon_image = pygame.image.load('image/Fon.png')
         self.fon = self.fon_image.get_rect()
+        self.menu_image = pygame.image.load('image/Menu.png')
+        self.menu = self.menu_image.get_rect()
         self.settings = Settings()
         self.rocket = Rocket(self.screen, self.settings)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self.alien_numbers = 0
+        self.game_status = True
 
     def key_event(self):
         """Обрабатывает нажатие клавиш"""
@@ -52,6 +59,15 @@ class Cosmos:
                 elif event.key == pygame.K_s:
                     self.rocket.move_DOWN = False
 
+    def spawn_alien(self):
+        """Генерирует новых пришельцев"""
+        alien = Alien(self.screen, self.settings, self.rocket)
+        if ((self.rocket.rect.x - 10) >= alien.rect.x <= (self.rocket.rect.x + 10)) and\
+                ((self.rocket.rect.y - 10) >= alien.rect.y <= (self.rocket.rect.y + 10)):
+            if self.alien_numbers < self.settings.appearance_speed_aliens * pygame.time.get_ticks() / 1000:
+                self.aliens.add(alien)
+                self.alien_numbers += 1
+
     def bullet_sprite(self):
         """Рисует и обновляет спрайт снаряда"""
         for bullet in self.bullets.sprites():
@@ -61,14 +77,28 @@ class Cosmos:
             else:
                 self.bullets.remove(bullet)
 
+    def game_finish(self):
+        """Завершение игры"""
+        if pygame.sprite.spritecollideany(self.rocket, self.aliens):
+            self.game_status = False
+
     def run_game(self):
         """Обновляет события игры"""
         while True:
-            self.screen.blit(self.fon_image, self.fon)
-            self.key_event()
-            self.rocket.update_rocket()
-            self.bullet_sprite()
-            self.rocket.draw_rocket()
+            if not self.game_status:
+                self.screen.blit(self.menu_image, self.menu)
+                self.key_event()
+            else:
+                self.screen.blit(self.fon_image, self.fon)
+                self.key_event()
+                self.rocket.update_rocket()
+                pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+                self.bullet_sprite()
+                self.rocket.draw_rocket()
+                self.spawn_alien()
+                self.aliens.update()
+                self.aliens.draw(self.screen)
+                self.game_finish()
             pygame.display.flip()
 
 

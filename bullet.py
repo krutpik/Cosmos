@@ -13,9 +13,11 @@ class Bullet(Sprite):
         self.rocket = rocket
         self.color = self.settings.bullets_color
         self.rect = pygame.Rect(0, 0, self.settings.bullets_width, self.settings.bullets_height)
+        self.direction = ''
         self.bullet_direction()
 
     def bullet_direction(self):
+        """Обновляет положение снаряда"""
         if self.rocket.image == self.rocket.image_right:
             self.direction = "right"
             self.rect = pygame.Rect(0, 0, self.settings.bullets_height, self.settings.bullets_width)
@@ -34,7 +36,7 @@ class Bullet(Sprite):
             self.rect.midbottom = self.rocket.rect.midbottom
 
     def update(self):
-        """Перемещение снаряда"""
+        """Обновляет направление снаряда"""
         if self.direction == 'right':
             self.rect.x += self.settings.rocket_speed
         if self.direction == 'left':
