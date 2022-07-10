@@ -6,7 +6,7 @@ class Rocket:
 
     def __init__(self, screen, settings):
         self.screen = screen
-        self.screen_rect = screen.get_rect()
+        self.screen_rect = self.screen.get_rect()
         self.settings = settings
         self.image = pygame.image.load('image/pixil-frame-0.png')
         self.rect = self.image.get_rect()
@@ -23,7 +23,7 @@ class Rocket:
         self.image_down = pygame.transform.rotate(self.image, 180)
 
     def update_rocket(self):
-        """Флаги управления кораблём"""
+        """Обновляет позицию корабля"""
         if self.move_RIGHT and self.rect.right < self.screen_rect.right:
             self.image = self.image_right
             self.x += self.settings.rocket_speed
@@ -40,5 +40,5 @@ class Rocket:
         self.rect.y = self.y
 
     def draw_rocket(self):
-        """Обновляет позицию корабля"""
+        """Отрисовывает корабль"""
         self.screen.blit(self.image, self.rect)

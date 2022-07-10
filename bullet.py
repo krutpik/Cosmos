@@ -22,10 +22,12 @@ class Bullet(Sprite):
             self.direction = "right"
             self.rect = pygame.Rect(0, 0, self.settings.bullets_height, self.settings.bullets_width)
             self.rect.midbottom = self.rocket.rect.midright
+            self.rect.y = self.rocket.rect.y + 45
         elif self.rocket.image == self.rocket.image_left:
             self.direction = "left"
             self.rect = pygame.Rect(0, 0, self.settings.bullets_height, self.settings.bullets_width)
             self.rect.midbottom = self.rocket.rect.midleft
+            self.rect.y = self.rocket.rect.y + 45
         elif self.rocket.image == self.rocket.image_up:
             self.direction = "up"
             self.rect = pygame.Rect(0, 0, self.settings.bullets_width, self.settings.bullets_height)
@@ -38,13 +40,14 @@ class Bullet(Sprite):
     def update(self):
         """Обновляет направление снаряда"""
         if self.direction == 'right':
-            self.rect.x += self.settings.rocket_speed
+            self.rect.x += self.settings.bullets_speed
         if self.direction == 'left':
-            self.rect.x -= self.settings.rocket_speed
+            self.rect.x -= self.settings.bullets_speed
         if self.direction == 'up':
-            self.rect.y -= self.settings.rocket_speed
+            self.rect.y -= self.settings.bullets_speed
         if self.direction == 'down':
-            self.rect.y += self.settings.rocket_speed
+            self.rect.y += self.settings.bullets_speed
+
 
     def draw_bullet(self):
         """Рисует снаряд"""
